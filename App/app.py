@@ -44,6 +44,9 @@ def logout():
     color = request.cookies.get('colorchoice',"red")
     r = Response(render_template('login.html', colorchoice=color), status=200)
     r.headers.add('Set-Cookie','user=;')
+
+    r.headers.add('Set-Cookie','route=; path=/;') # Clear the route cookie set by NGINX
+    
     return r
     
 
