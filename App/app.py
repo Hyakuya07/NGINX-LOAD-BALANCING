@@ -1,12 +1,11 @@
 from flask import Flask, render_template, request, Response, send_from_directory, send_file
 from datetime import datetime, timezone, timedelta
 import mysql.connector as mysql
-import logging
-log = logging.getLogger('werkzeug')
-log.disabled = True
+import hashlib
 
 db = mysql.connect(
-    host='host.docker.internal',
+    host='host.docker.internal',  # Use host.docker.internal to connect to the host machine
+    # host='localhost',  # Use localhost if running outside Docker
     user='root',
     port = 3306,
     password='idonotknowthisdatabase',
@@ -30,6 +29,14 @@ def reroute_to(target):
 def handle_js_get(filename):
     return send_file("templates/js/" + filename)
     
+@app.route('/hola')
+def hola():
+    print("Handling /hola")
+    user = request.cookies.get('user', '')
+    if user:
+        return render_template('hola.html', user=user, id=container_id)
+    else:
+        return reroute_to('/')
 
 @app.route('/logout')
 def logout():
@@ -62,7 +69,9 @@ def dash():
         usern = request.form.get('username','')
         passw = request.form.get('password', '')
         color = request.form.get('colorchoice', 'blue')
-        cursor.execute("SELECT username, password FROM users WHERE username = %s AND password = %s", (usern, passw))
+        user = hashlib.sha256(usern.encode()).hexdigest()
+        passw = hashlib.sha256(passw.encode()).hexdigest()
+        cursor.execute("SELECT username, password FROM users WHERE username = %s AND password = %s", (user, passw))
         if cursor.fetchone() is None:
             Flag = False
         else:

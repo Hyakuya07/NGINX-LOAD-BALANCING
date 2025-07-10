@@ -1,16 +1,13 @@
 <html>
     <head>
-        <script src="/js/functions.js"></script>
     </head>
-<body style="align-content: center;"  onload="writedate()">
-    <h1 style="color: {{colorchoice}};"> 
-            Hello {{user}} - welcome to your 
-            Container ID: {{id}}
-        </h1>
-        Logged in At <div id="lin"> </div>
-         <script type="text/javascript"> document.getElementById("lin").innerHTML = (new Date()).toGMTString();</script>
-    <a href="/"> Go back to Login Page </a>
-    <a href="/logout"> LOg out </a>
-    <div id="date"> </div>
+<body>
+    <h1> 
+            Hola {{user}} - Bienvenido a tu Dashboard
+            ID de Contenedor: {{id}}
+    </h1>
+    <a href="/"> Regresar a la página de inicio de sesión </a>
+    <br><br>
+    <a href="/logout"> Finalizar la sesión </a>
 </body>
 </html>

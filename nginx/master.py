@@ -10,11 +10,9 @@ def add_container(container):
 
     with open("nginx.conf", "r") as fh:
         lines = fh.readlines()
-    
-    print(lines)
 
     x = lines.index('### END OF BACKEND SERVERS ###\n')
-    lines.insert(x, f'      server {container}:5000;\n')
+    lines.insert(x, f'        server {container}:5000;\n')
 
     with open("nginx.conf", "w") as fh:
         fh.writelines(lines)
@@ -31,7 +29,7 @@ def kill(container):
     with open("nginx.conf", "r") as fh:
         lines = fh.readlines()
 
-    x = lines.index(f'    server {container}:5000;\n')
+    x = lines.index(f'        server {container}:5000;\n')
     lines.pop(x)
 
     with open("nginx.conf", "w") as fh:
@@ -48,17 +46,17 @@ def main():
     while input("Modify/Exit? (m/e): ").strip().lower() == 'm':
         action = input("Add/Remove? (a/r): ").strip().lower()
         container = input("Enter container name: ").strip()
-
-        if container in contlist:
-            print(f"{container} is already in the list.")
-            continue
-
+     
         if action == 'a':
+            if container in contlist:
+                print(f"{container} is already in the list.")
+                continue
             add_container(container)
         elif action == 'r':
-            kill(container)
-        else:
-            print("Invalid action. Please try again.")
+            if container in contlist:
+                kill(container)
+            else:
+                print(f"{container} is not in the list.")
 
 if __name__ == "__main__":
     main()
